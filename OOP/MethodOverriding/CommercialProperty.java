@@ -22,4 +22,10 @@ public class CommercialProperty extends Property{
         System.out.println();
 
     }
+
+    @Override
+    public String toString() {
+        String baseString = super.toString();
+        return String.format("%s, \nCommercialProperty (overriding toString method) {Type: %s, Contacted Services Fees: %.1f}", baseString, commercialPropertyType, contractedServicesFees);
+    }
 }

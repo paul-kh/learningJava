@@ -20,4 +20,9 @@ public class Property {
         System.out.println();
     }
 
+    @Override
+    public String toString(){
+        return String.format("Property (overriding toString method) {type: %s, projectName: %s, propertySize: %s", propertyType, projectName,propertySize);
+    }
+
 }
