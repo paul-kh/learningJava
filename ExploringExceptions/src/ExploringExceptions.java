@@ -22,11 +22,17 @@ public class ExploringExceptions {
     // Exception handling by throwing exception in the method signature
     public static void main(String[] args) throws FileNotFoundException {
 
-            // The file "myFile.txt" doesn't exist
-            FileReader file = new FileReader("D:\\java\\ExploringExceptions\\data\\myfile.txt");
-            // Note - Java will auto catch the exception and print exception stack.
-            //        Next line of code will not be executed
-            System.out.println("code execution here can't continues after the exception thrown");
+            try {
+                // The file "myFile.txt" doesn't exist
+                FileReader file = new FileReader("D:\\java\\ExploringExceptions\\data\\myfile.txt");
 
+            }
+            catch (FileNotFoundException e) {
+                System.out.println("\nThe file not found.");
+            }
+        // try-catch block exception handling take precedence over
+        // the handling in method signature - thus Exception Stack will not auto printed
+        // Next line of code in this method will be executed as well.
+        System.out.println("code execution is complete");
     }
 }
