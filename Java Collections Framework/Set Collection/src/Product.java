@@ -1,5 +1,8 @@
 import java.util.Objects;
-public class Product {
+
+// Make the Product class implement Comparable interface
+// So Product object becomes comparable and can be added to TreeSet
+public class Product implements Comparable<Product> {
 
     private String name;
     private String category;
@@ -39,5 +42,19 @@ public class Product {
         }
 
         return false;
+    }
+
+    // Make product object comparable and can be added to TreeSet
+    // The "compareTo" is the single method in the "Comparable" interface
+    @Override
+    public int compareTo(Product o) {
+
+        int compareName = this.name.compareTo(o.name);
+
+        if (compareName != 0) {
+            return compareName;
+        }
+
+        return this.category.compareTo(o.category);
     }
 }
