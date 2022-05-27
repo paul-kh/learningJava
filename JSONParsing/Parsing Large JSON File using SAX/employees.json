@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "Jeanette Penddreth",
+    "contact_info": [
+      "jpenddreth0@census.gov",
+      "jpenddreth0@gmail.com"
+    ],
+    "gender": "Female",
+    "salary": 84340.5,
+    "active": true,
+    "address": {
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": 90212
+    }
+  }
+]
