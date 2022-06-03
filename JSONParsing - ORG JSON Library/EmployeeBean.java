@@ -1,4 +1,6 @@
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 
 public class EmployeeBean {
 
@@ -7,6 +9,18 @@ public class EmployeeBean {
     private String title;
     private double  salary;
     private int age;
+    private boolean active;
+
+    //The org.json can also convert the result returned from the is__ method to JSON as well
+    public Boolean isActive() { return active; }
+
+    public void setActive(Boolean active) {this.active = active; }
+
+    // Nested objects "list of committees" since 1 person can belong to many committees
+    private List<CommitteeBean> committeeList;
+    //Setter and getter of committeeList
+    public List<CommitteeBean> getCommitteeList() { return committeeList; }
+    public void setCommitteeList(CommitteeBean... committeeList) { this.committeeList = Arrays.asList(committeeList); }
 
     //this default no-argument constructor is a must for Bean object
     public EmployeeBean () {
@@ -20,34 +34,24 @@ public class EmployeeBean {
         this.age = age;
     }
 
-    public BigInteger getId(){
-        return id;
-    }
-    public void setId(BigInteger id){
-        this.id = id;
-    }
-    public String getName(){
-        return name;
-    }
-    public void setName(String name){
-        this.name = name;
-    }
-    public String getTitle(){
-        return title;
-    }
-    public void setTitle(String title){
-        this.title = title;
-    }
-    public double getSalary(){
-        return salary;
-    }
-    public void setSalary(double salary){
-        this.salary = salary;
-    }
-    public int getAge(){
-        return age;
-    }
-    public void setAge(int age){
-        this.age = age;
-    }
+    public BigInteger getId(){ return id; }
+
+    public void setId(BigInteger id) { this.id = id;  }
+
+    public String getName(){ return name;   }
+
+    public void setName(String name){   this.name = name; }
+
+    public String getTitle(){    return title;   }
+
+    public void setTitle(String title) { this.title = title;  }
+
+    public double getSalary(){ return salary;   }
+
+    public void setSalary(double salary){       this.salary = salary;   }
+
+    public int getAge(){   return age;    }
+
+    public void setAge(int age){ this.age = age;    }
+
 }

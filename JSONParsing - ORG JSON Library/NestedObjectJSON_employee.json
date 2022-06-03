@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Peter",
+    "active": false,
+    "committeeList": [
+      {
+        "name": "Management",
+        "numMembers": 5
+      },
+      {
+        "name": "Food",
+        "numMembers": 20
+      }
+    ],
+    "id": 1234568,
+    "title": "CEO",
+    "salary": 150000,
+    "age": 30
+  },
+  {
+    "name": "Peter",
+    "active": true,
+    "committeeList": [
+      {
+        "name": "Management",
+        "numMembers": 5
+      },
+      {
+        "name": "Administration",
+        "numMembers": 10
+      }
+    ],
+    "id": 1234569,
+    "title": "CFO",
+    "salary": 0,
+    "age": 0
+  },
+  {
+    "name": "Tana",
+    "active": false,
+    "id": 1234570,
+    "salary": 0,
+    "age": 0
+  }
+]
