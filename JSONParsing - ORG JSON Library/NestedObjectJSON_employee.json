@@ -1,8 +1,9 @@
 [
   {
-    "name": "Peter",
+    "full_name": "Peter",
+    "employee_id": 1234568,
     "active": false,
-    "committeeList": [
+    "committees": [
       {
         "name": "Management",
         "numMembers": 5
@@ -12,15 +13,13 @@
         "numMembers": 20
       }
     ],
-    "id": 1234568,
-    "title": "CEO",
-    "salary": 150000,
-    "age": 30
+    "title": "CEO"
   },
   {
-    "name": "Peter",
+    "full_name": "Peter",
+    "employee_id": 1234569,
     "active": true,
-    "committeeList": [
+    "committees": [
       {
         "name": "Management",
         "numMembers": 5
@@ -30,16 +29,11 @@
         "numMembers": 10
       }
     ],
-    "id": 1234569,
-    "title": "CFO",
-    "salary": 0,
-    "age": 0
+    "title": "CFO"
   },
   {
-    "name": "Tana",
-    "active": false,
-    "id": 1234570,
-    "salary": 0,
-    "age": 0
+    "full_name": "Tana",
+    "employee_id": 1234570,
+    "active": false
   }
 ]
