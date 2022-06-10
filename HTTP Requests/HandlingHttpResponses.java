@@ -8,14 +8,13 @@ import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.json.JSONObject;
-
-import org.json.JSONObject;
+import java.time.Duration;
 
 public class HandlingHttpResponses {
 
     public static void  main(String[] args) throws IOException, InterruptedException {
 
-        String url = "https://reqres.in/api/users";
+        String url = "https://reqres.in/api/users?delay=10"; // the end point api server will delay the response by 10 seconds
 
         //Create client
         HttpClient client = HttpClient.newHttpClient();
@@ -23,6 +22,8 @@ public class HandlingHttpResponses {
         //Create HTTP GET request
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(url))
+                .GET() //Explicitly specify GET method in the request  -- good practice
+                .timeout(Duration.ofMillis(15000)) // timeout if not receive the response within 5 seconds
                 .build();
 
         //Send HTTP request to remote server and write response body to file
