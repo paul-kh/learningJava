@@ -14,9 +14,9 @@ public class Main {
 
             System.out.println("\n##############\n");
 
-            System.out.println("Updating hourly rates for FT partners...\n");
+            System.out.println("Deleting the user with ID 101...\n");
 
-            int status = dpq.applyPayAdjustment(conn, 2, true);
+            int status = dpq.deleteDeliveryPartner(conn, 101);
 
             System.out.println("Status returned: " + status);
 

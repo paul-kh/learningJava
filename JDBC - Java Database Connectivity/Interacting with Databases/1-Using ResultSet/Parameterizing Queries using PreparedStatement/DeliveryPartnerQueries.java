@@ -96,4 +96,28 @@ public class DeliveryPartnerQueries {
 
         return status;
     }
+
+    //DELETE Query
+    public int deleteDeliveryPartner(Connection conn, int id){
+
+        int status = 0;
+
+        try {
+
+            String query = "delete from delpartners "
+                    + "where id = ?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setDouble(1, id);
+
+            status = ps.executeUpdate();
+
+        }
+        catch (SQLException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return status;
+    }
 }
