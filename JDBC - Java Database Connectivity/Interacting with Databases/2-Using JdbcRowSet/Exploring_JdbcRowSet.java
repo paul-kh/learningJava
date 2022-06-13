@@ -20,38 +20,31 @@ public class Exploring_JdbcRowSet {
 
     public static void main(String[] args) {
 
-
+        //Update hourly rate of all non-fulltime employees
         try (JdbcRowSet jdbcRS = DBUtils.getJdbcRowSet("DeliveryService")){
 
             jdbcRS.setCommand("select * from delpartners");
             jdbcRS.execute();
 
-            System.out.println("Moving around in a JdbcRowSet: \n");
+            int updatedRows = 0;
 
-            jdbcRS.first();
-            displayRow("first()", jdbcRS);
+            while(jdbcRS.next()){
 
-            jdbcRS.relative(2);
-            displayRow("relative(2)", jdbcRS);
+                if(!jdbcRS.getBoolean("is_fulltime")){
 
-            jdbcRS.previous();
-            displayRow("previous()", jdbcRS);
+                    jdbcRS.updateDouble("hourly_rate", 21.0);
+                    jdbcRS.updateRow();
 
-            jdbcRS.absolute(4);
-            displayRow("absolute(4)", jdbcRS);
+                    displayRow("Updated record: ", jdbcRS);
+                    updatedRows++;
+                }
+            }
 
-            System.out.println("\nSleeping for a minute...");
-            Thread.sleep(60000);
+            System.out.println("\nNumber of updated rows: " + updatedRows);
 
-            jdbcRS.last();
-            jdbcRS.refreshRow(); // to make jsdbRS dynamically pickup the latest updates happened in the DB
-            displayRow("last()", jdbcRS);
-
-            jdbcRS.relative(-1);
-            displayRow("relative(-1)", jdbcRS);
 
         }
-        catch (SQLException | InterruptedException ex) {
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
