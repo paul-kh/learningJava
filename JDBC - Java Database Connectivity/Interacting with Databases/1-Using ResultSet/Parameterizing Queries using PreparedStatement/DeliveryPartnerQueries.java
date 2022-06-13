@@ -69,4 +69,31 @@ public class DeliveryPartnerQueries {
         return status;
 
     }
+
+    //UPDATE Query
+    public int applyPayAdjustment(Connection conn, double adjAmount, boolean isFT){
+
+        int status = 0;
+
+        try {
+
+            String query = "update delpartners "
+                    + "set hourly_rate = hourly_rate + ?"
+                    + "where is_fulltime = ?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ps.setDouble(1, adjAmount);
+            ps.setBoolean(2, isFT);
+
+            status = ps.executeUpdate(); // returning number of affected rows
+
+        }
+        catch (SQLException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return status;
+    }
 }
