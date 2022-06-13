@@ -13,6 +13,17 @@ public class Main {
         try (Connection conn = DBUtils.getMysqlConnection("DeliveryService")){
 
             System.out.println("\n##############\n");
+
+            System.out.println("Adding a new partner...\n");
+
+            int status = dpq.addNewDelPartner(conn,
+                    "Gav", "Comey", 17, true);
+
+            System.out.println("Status returned: " + status);
+
+            System.out.println("\n##############");
+            System.out.println("Retrieving all Delivery Partner details...\n");
+
             System.out.println("Retrieving all Delivery Partner details...\n");
 
             ResultSet rs = dpq.getAllDelPartners(conn);
