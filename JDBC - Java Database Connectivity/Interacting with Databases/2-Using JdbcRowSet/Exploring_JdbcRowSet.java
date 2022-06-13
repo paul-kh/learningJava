@@ -20,6 +20,7 @@ public class Exploring_JdbcRowSet {
 
     public static void main(String[] args) {
 
+
         try (JdbcRowSet jdbcRS = DBUtils.getJdbcRowSet("DeliveryService")){
 
             jdbcRS.setCommand("select * from delpartners");
@@ -39,14 +40,18 @@ public class Exploring_JdbcRowSet {
             jdbcRS.absolute(4);
             displayRow("absolute(4)", jdbcRS);
 
+            System.out.println("\nSleeping for a minute...");
+            Thread.sleep(60000);
+
             jdbcRS.last();
+            jdbcRS.refreshRow(); // to make jsdbRS dynamically pickup the latest updates happened in the DB
             displayRow("last()", jdbcRS);
 
-            jdbcRS.relative(-1); //Similar to jdbcRS.previous();
+            jdbcRS.relative(-1);
             displayRow("relative(-1)", jdbcRS);
 
         }
-        catch (SQLException ex) {
+        catch (SQLException | InterruptedException ex) {
             ex.printStackTrace();
         }
     }
