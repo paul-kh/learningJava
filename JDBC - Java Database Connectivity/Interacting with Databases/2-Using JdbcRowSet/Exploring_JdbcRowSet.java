@@ -20,28 +20,31 @@ public class Exploring_JdbcRowSet {
 
     public static void main(String[] args) {
 
-        //Update hourly rate of all non-fulltime employees
+        //Add new row to table data if number of part-time emp < 5
         try (JdbcRowSet jdbcRS = DBUtils.getJdbcRowSet("DeliveryService")){
 
-            jdbcRS.setCommand("select * from delpartners");
+            jdbcRS.setCommand("select * from delpartners where is_fulltime = false");
             jdbcRS.execute();
 
-            int updatedRows = 0;
+            jdbcRS.last(); // Move the cursor to the last row
+            int numPT = jdbcRS.getRow(); //Count the total rows returned
+            System.out.println("Number of part-time partners: " + numPT);
 
-            while(jdbcRS.next()){
+            if(numPT < 5){
 
-                if(!jdbcRS.getBoolean("is_fulltime")){
+                jdbcRS.moveToInsertRow(); //Move the cursor to new row for insertion
 
-                    jdbcRS.updateDouble("hourly_rate", 21.0);
-                    jdbcRS.updateRow();
+                jdbcRS.updateString("first_name", "Kylie");
+                jdbcRS.updateString("last_name", "Kass");
+                jdbcRS.updateDouble("hourly_rate", 22.0);
+                jdbcRS.updateBoolean("is_fulltime", false);
 
-                    displayRow("Updated record: ", jdbcRS);
-                    updatedRows++;
-                }
+                jdbcRS.insertRow();
+
+                jdbcRS.last();
+                displayRow("Added part-time partner: ", jdbcRS);
+
             }
-
-            System.out.println("\nNumber of updated rows: " + updatedRows);
-
 
         }
         catch (SQLException ex) {
