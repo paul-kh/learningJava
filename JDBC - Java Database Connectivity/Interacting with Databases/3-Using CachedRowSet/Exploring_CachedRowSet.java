@@ -25,31 +25,35 @@ public class Exploring_CachedRowSet {
 
             conn.setAutoCommit(false);
 
-            CachedRowSet cachedRS = DBUtils.getCachedRowSet(""); //no schema name
+            CachedRowSet cachedRS = DBUtils.getCachedRowSet("");
 
-            cachedRS.setCommand("select * from delpartners");
+            cachedRS.setCommand("select * from delpartners where is_fulltime = false");
             cachedRS.execute(conn);
 
-            int updatedRows = 0;
+            cachedRS.last();
+            int numPT = cachedRS.getRow();
+            System.out.println("Number of part-time partners: " + numPT);
 
-            while(cachedRS.next()){
+            if(numPT < 5){
 
-                if(!cachedRS.getBoolean("is_fulltime")){
+                cachedRS.moveToInsertRow();
 
-                    cachedRS.updateDouble("hourly_rate", 26.0);
-                    cachedRS.updateRow();
+                cachedRS.updateNull("id"); //To update Auto_Increment field which is "id"
+                cachedRS.updateString("first_name", "Brian");
+                cachedRS.updateString("last_name", "Walters");
+                cachedRS.updateDouble("hourly_rate", 25.0);
+                cachedRS.updateBoolean("is_fulltime", false);
 
-                    displayRow("Updated record: ", cachedRS);
-                    updatedRows++;
-                }
+                cachedRS.insertRow();
+                cachedRS.moveToCurrentRow();
+
+                cachedRS.last();
+                displayRow("Added part-time partner: ", cachedRS);
             }
 
-            cachedRS.acceptChanges(conn); //Push through to DB using the currently open Connection
+            cachedRS.acceptChanges(conn);
 
-            cachedRS.close(); //Close the CachedRowSet object resource
-
-            System.out.println("\nNumber of updated rows: " + updatedRows);
-
+            cachedRS.close();
         }
 
         catch (SQLException ex) {
