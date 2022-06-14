@@ -27,29 +27,24 @@ public class Exploring_CachedRowSet {
 
             CachedRowSet cachedRS = DBUtils.getCachedRowSet("");
 
-            cachedRS.setCommand("select * from delpartners where is_fulltime = false");
+            cachedRS.setCommand("select * from delpartners");
             cachedRS.execute(conn);
 
-            cachedRS.last();
-            int numPT = cachedRS.getRow();
-            System.out.println("Number of part-time partners: " + numPT);
+            int removedRows = 0;
 
-            if(numPT < 5){
+            while(cachedRS.next()){
 
-                cachedRS.moveToInsertRow();
+                if(cachedRS.getBoolean("is_fulltime") == false
+                        && cachedRS.getDouble("hourly_rate") > 20){
 
-                cachedRS.updateNull("id"); //To update Auto_Increment field which is "id"
-                cachedRS.updateString("first_name", "Brian");
-                cachedRS.updateString("last_name", "Walters");
-                cachedRS.updateDouble("hourly_rate", 25.0);
-                cachedRS.updateBoolean("is_fulltime", false);
+                    displayRow("Removing row: ", cachedRS);
+                    cachedRS.deleteRow();
 
-                cachedRS.insertRow();
-                cachedRS.moveToCurrentRow();
-
-                cachedRS.last();
-                displayRow("Added part-time partner: ", cachedRS);
+                    removedRows++;
+                }
             }
+
+            System.out.println("\nNumber of deleted rows: " + removedRows);
 
             cachedRS.acceptChanges(conn);
 
