@@ -1,78 +1,53 @@
 package com.paulchheang.jdbc;
 
-import javax.sql.rowset.CachedRowSet;
-import javax.sql.rowset.JoinRowSet;
+import javax.sql.RowSet;
+import javax.sql.rowset.FilteredRowSet;
 import javax.sql.rowset.RowSetProvider;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+// The code to filter for delivery partners whose hourly_rate is between 0 and $20
+// The code is using a filter class 'DeliveryPartnerFilter' that implements JDBC Predicate interface
 public class Exploring_RowSets {
 
+    //Method displaying results of the DB operations
+    public static void displayRow(String label, RowSet rowSet) throws SQLException{
+
+        String fName = rowSet.getString("first_name");
+        String lName = rowSet.getString("last_name");
+        double hourlyRate = rowSet.getDouble("hourly_rate");
+        boolean isFT = rowSet.getBoolean("is_fulltime");
+
+        String stdData = "\n%s:  %s | %s | %.2f | %s \n";
+        System.out.format(stdData, label, fName, lName, hourlyRate, isFT);
+    }
+
     public static void main(String[] args) {
-        // Join 3 tables
-        //Using Try resource block to create a Connection object (Resource auto closed after Try block)
+
         try (Connection conn = DBUtils.getMysqlConnection("DeliveryService")){
 
-            //Create CachedRowSet of 'delpartners' table
-            CachedRowSet partnersRS = DBUtils.getCachedRowSet("");
-            partnersRS.setCommand("select * from delpartners");
+            FilteredRowSet partnersRS = RowSetProvider.newFactory().createFilteredRowSet();
+
+            partnersRS.setCommand("select first_name, last_name, hourly_rate, is_fulltime "
+                    +  "from delpartners");
             partnersRS.execute(conn);
 
-            //Create CachedRowSet of 'delvehicles' table
-            CachedRowSet vehiclesRS = DBUtils.getCachedRowSet("");
-            vehiclesRS.setCommand("select * from delvehicles");
-            vehiclesRS.execute(conn);
+            DeliveryPartnerFilter zeroToTwentyFilter
+                    = new DeliveryPartnerFilter(0,20,3);
 
-            //Create CachedRowSet of 'deliveries' table
-            CachedRowSet deliveriesRS = DBUtils.getCachedRowSet("");
-            deliveriesRS.setCommand("select * from deliveries");
-            deliveriesRS.execute(conn);
-
-            //Create JoinRowSet object: partners-deliveries, and vehicles-delivery
-            JoinRowSet joinRSPartnerDelivery = RowSetProvider.newFactory().createJoinRowSet();
-            //Create JoinRowSet object: vehicles-delivery
-            JoinRowSet joinRSVehicleDelivery = RowSetProvider.newFactory().createJoinRowSet();
-            //Create final JoinRowSet object for the result of joining the above 2 JoinRowSets
-            JoinRowSet joinRS = RowSetProvider.newFactory().createJoinRowSet();
-
-            //Add the join between 'vehicles' and 'deliveries' tables
-            joinRSVehicleDelivery.addRowSet(vehiclesRS, "vid");
-            joinRSVehicleDelivery.addRowSet(deliveriesRS, "vid");
-
-            //Add the join between 'partners' and 'deliveries' tables
-            joinRSPartnerDelivery.addRowSet(partnersRS, "pid");
-            joinRSPartnerDelivery.addRowSet(deliveriesRS.createCopyNoConstraints(), "pid");
-            /*  Note: We can't use 'deliveriesRS again since it was used once already when creating
-                the above join between 'vehicles' and 'deliveries'.
-                We have to create a copy of the 'deliveriesRS' to create the join between 'partners'
-                and 'deliveries' */
-
-            //Add the join between the 2 above joins
-            joinRS.addRowSet(joinRSVehicleDelivery, "did");
-            joinRS.addRowSet(joinRSPartnerDelivery, "did");
+            partnersRS.setFilter(zeroToTwentyFilter);
 
             int rowNum = 1;
 
-            while(joinRS.next()){
+            while(partnersRS.next()){
 
-                String fName = joinRS.getString("first_name");
-                String color = joinRS.getString("color");
-                String vType = joinRS.getString("vehicle_type");
-                String destination = joinRS.getString("destination");
-
-                String stdData = "\nRow #%d:  %s | %s | %s | %s";
-                System.out.format(stdData, rowNum, fName, color, vType, destination);
+                displayRow("Row #" + rowNum, partnersRS);
                 rowNum++;
             }
 
-            joinRS.close();
-            joinRSVehicleDelivery.close();
-            joinRSPartnerDelivery.close();
             partnersRS.close();
-            vehiclesRS.close();
-            deliveriesRS.close();
-        }
 
+        }
         catch (SQLException ex) {
             ex.printStackTrace();
         }
