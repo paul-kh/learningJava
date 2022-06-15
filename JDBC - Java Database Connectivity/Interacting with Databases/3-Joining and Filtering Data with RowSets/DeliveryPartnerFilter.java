@@ -5,27 +5,30 @@ import javax.sql.RowSet;
 import javax.sql.rowset.FilteredRowSet;
 import javax.sql.rowset.Predicate;
 
-// Create a class that filters for delivery partners whose hourly_rate is between
-// 'lowRate' and 'highRate'
 public class DeliveryPartnerFilter implements Predicate {
 
     private int lowRate;
     private int highRate;
-    private String colName = null;
-    private int colNumber = -1;
+    private boolean isFT;
+    private String colNameRate = null;
+    private String colNameIsFT = null;
+    private int colNumberRate = -1;
+    private int colNumberIsFT = -1;
 
-    //Constructor that accepts 'colNumber' for the table column number to be filtered
-    public DeliveryPartnerFilter(int lo, int hi, int colNumber) {
+    public DeliveryPartnerFilter(int lo, int hi, boolean isFT, int colNumberRate, int colNumberIsFT) {
         this.lowRate = lo;
         this.highRate = hi;
-        this.colNumber = colNumber;
+        this.isFT = isFT;
+        this.colNumberRate = colNumberRate;
+        this.colNumberIsFT = colNumberIsFT;
     }
 
-    //Constructor that accepts 'colName' for the table column name/label to be filtered
-    public DeliveryPartnerFilter(int lo, int hi, String colName) {
+    public DeliveryPartnerFilter(int lo, int hi, boolean isFT, String colNameRate, String colNameIsFT) {
         this.lowRate = lo;
         this.highRate = hi;
-        this.colName = colName;
+        this.isFT = isFT;
+        this.colNameRate = colNameRate;
+        this.colNameIsFT = colNameIsFT;
     }
 
     @Override
@@ -42,9 +45,12 @@ public class DeliveryPartnerFilter implements Predicate {
 
         try {
 
-            double columnValue = frs.getDouble(this.colNumber); //because the 'hourly_rate' field is of type double
+            double columnValueRate = frs.getDouble(this.colNumberRate);
+            boolean columnValueIsFT = frs.getBoolean(this.colNumberIsFT);
 
-            if ((columnValue >= this.lowRate) && (columnValue <= this.highRate)) {
+            if ((columnValueRate >= this.lowRate)
+                    && (columnValueRate <= this.highRate)
+                    && (columnValueIsFT == this.isFT)) {
 
                 evaluation = true;
 
@@ -66,7 +72,7 @@ public class DeliveryPartnerFilter implements Predicate {
 
         boolean evaluation = true;
 
-        if (colNumber == columnNumber) {
+        if (colNumberRate == columnNumber) {
 
             double columnValue = ((Double) value).doubleValue();
 
@@ -89,7 +95,7 @@ public class DeliveryPartnerFilter implements Predicate {
 
         boolean evaluation = true;
 
-        if (columnName.equalsIgnoreCase(this.colName)) {
+        if (columnName.equalsIgnoreCase(this.colNameRate)) {
 
             double columnValue = ((Double) value).doubleValue();
 

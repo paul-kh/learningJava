@@ -6,7 +6,7 @@ import javax.sql.rowset.RowSetProvider;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-// The code to filter for delivery partners whose hourly_rate is between 0 and $20
+// The code to filter for delivery partners whose hourly_rate is between $19 and $21 and is_fulltime = true
 // The code is using a filter class 'DeliveryPartnerFilter' that implements JDBC Predicate interface
 public class Exploring_RowSets {
 
@@ -32,10 +32,10 @@ public class Exploring_RowSets {
                     +  "from delpartners");
             partnersRS.execute(conn);
 
-            DeliveryPartnerFilter zeroToTwentyFilter
-                    = new DeliveryPartnerFilter(0,20,3);
+            DeliveryPartnerFilter customFilter
+                    = new DeliveryPartnerFilter(19, 21, true, 3, 4);
 
-            partnersRS.setFilter(zeroToTwentyFilter);
+            partnersRS.setFilter(customFilter);
 
             int rowNum = 1;
 
@@ -46,7 +46,6 @@ public class Exploring_RowSets {
             }
 
             partnersRS.close();
-
         }
         catch (SQLException ex) {
             ex.printStackTrace();
