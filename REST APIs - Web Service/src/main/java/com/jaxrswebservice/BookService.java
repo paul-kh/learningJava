@@ -4,6 +4,7 @@ import com.applicationdao.BookDAO;
 import com.applicationentities.Book;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,11 +21,28 @@ public class BookService {
 
         List<Book> listOfBooks = BookDAO.getAllBooks();
 
-        //jersey-media-json-jackson library will auto convert response object
-        // to be JSON to be sent over HTTP to client.
-        // jersey-media-json-jackson needs to be added as dependency in the "pom.xml" file
         return Response.status(Response.Status.OK).entity(listOfBooks).build();
 
     }
 
+    @GET
+    @Path("/getbook/{param}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBook(@PathParam("param") String bookId) {
+
+        Book book = BookDAO.getBookById(bookId);
+
+        if(book == null){
+
+            String jsonResponse = "{\"message\": \"A book with the given ID does not exist\"," +
+                    "\"bookId\": \"" + bookId + "\"}";
+
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(jsonResponse)
+                    .build();
+        }
+
+        return Response.status(Response.Status.OK).entity(book).build();
+
+    }
 }
