@@ -43,6 +43,13 @@
       <artifactId>jakarta.activation-api</artifactId>
       <version>2.0.0</version>
     </dependency>
+
+    <!-- For jersey to auto convert response object to JSON object to be sent over to clients-->
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <version>3.0.1</version>
+    </dependency>
   </dependencies>
 
   <build>
