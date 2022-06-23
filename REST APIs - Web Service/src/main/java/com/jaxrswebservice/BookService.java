@@ -84,4 +84,27 @@ public class BookService {
 
         return Response.status(Response.Status.ACCEPTED).entity(book).build();
     }
+
+    @DELETE
+    @Path("/deletebook/{param}")
+    // In case of success, response will be of TEXT_PLAIN, in case of error, response will be of JSON
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    public Response deleteBook(@PathParam("param") String bookId) {
+
+        String deleteMsg = BookDAO.removeBook(bookId);
+
+        if(deleteMsg.startsWith("Error")){
+
+            String jsonResponse = "{\"error\": \"The book could not be removed.\"," +
+                    "\"message\": \"" + deleteMsg + "\"}";
+
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(jsonResponse)
+                    .build();
+        }
+
+        return Response.status(Response.Status.ACCEPTED)
+                .entity("Book deleted. ID: " + bookId)
+                .build();
+    }
 }
