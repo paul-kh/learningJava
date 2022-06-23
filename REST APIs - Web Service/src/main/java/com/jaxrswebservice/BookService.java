@@ -2,12 +2,7 @@ package com.jaxrswebservice;
 
 import com.applicationdao.BookDAO;
 import com.applicationentities.Book;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Consumes; //Allow data to be submitted to the API end point via POST method
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -67,5 +62,26 @@ public class BookService {
         }
 
         return Response.status(Response.Status.CREATED).entity(book).build();
+    }
+
+    @PUT
+    @Path("/updatebook")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateBook(Book book) {
+
+        String updateMsg = BookDAO.updateBook(book);
+
+        if(updateMsg.startsWith("Error")){
+
+            String jsonResponse = "{\"error\": \"The book could not be located.\"," +
+                    "\"message\": \"" + updateMsg + "\"}";
+
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(jsonResponse)
+                    .build();
+        }
+
+        return Response.status(Response.Status.ACCEPTED).entity(book).build();
     }
 }
